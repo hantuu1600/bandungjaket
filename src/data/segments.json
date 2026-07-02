@@ -1,0 +1,100 @@
+{
+  "segments": [
+    {
+      "id": 0,
+      "name": "Pelanggan Potensial",
+      "count": 8319,
+      "recency": 703.0,
+      "frequency": 2.0,
+      "monetary": 118391.0,
+      "badge": "info",
+      "color_dot": "#3b82f6",
+      "description": "Baru mulai bertransaksi ulang. Berpotensi menjadi pelanggan aktif dengan dorongan yang tepat.",
+      "recommendations": [
+        "Kirim penawaran follow-up setelah pembelian kedua",
+        "Voucher untuk mendorong pembelian ketiga",
+        "Tampilkan produk serupa berdasarkan riwayat pembelian"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Pelanggan Dorman",
+      "count": 20780,
+      "recency": 1567.0,
+      "frequency": 2.0,
+      "monetary": 116051.0,
+      "badge": "neutral",
+      "color_dot": "#6b7280",
+      "description": "Kelompok terbesar repeat buyer. Sudah lama tidak bertransaksi dengan frekuensi rendah.",
+      "recommendations": [
+        "Kirim kampanye reaktivasi via Shopee Broadcast",
+        "Tawarkan gratis ongkir atau diskon comeback",
+        "Fokus pada produk terlaris sebagai daya tarik"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Pelanggan Unggulan",
+      "count": 1259,
+      "recency": 620.0,
+      "frequency": 5.0,
+      "monetary": 475691.0,
+      "badge": "warning",
+      "color_dot": "#f59e0b",
+      "description": "Pelanggan paling aktif dan bernilai tinggi. Baru bertransaksi, sering belanja, dan total belanja terbesar.",
+      "recommendations": [
+        "Berikan loyalty reward atau voucher eksklusif",
+        "Tawarkan produk premium atau bundle spesial",
+        "Ajak bergabung ke referral program"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pelanggan Aktif",
+      "count": 1400,
+      "recency": 688.0,
+      "frequency": 3.0,
+      "monetary": 185045.0,
+      "badge": "success",
+      "color_dot": "#10b981",
+      "description": "Pelanggan yang masih aktif dengan frekuensi dan nilai belanja yang cukup baik.",
+      "recommendations": [
+        "Pertahankan dengan flash sale dan notifikasi produk baru",
+        "Dorong upsell ke produk kategori lebih tinggi",
+        "Cross-sell untuk menaikkan nilai per transaksi"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pelanggan Berisiko Berhenti",
+      "count": 5007,
+      "recency": 1563.0,
+      "frequency": 3.0,
+      "monetary": 199245.0,
+      "badge": "warning",
+      "color_dot": "#f97316",
+      "description": "Dulunya cukup aktif namun sudah lama tidak bertransaksi. Perlu intervensi segera.",
+      "recommendations": [
+        "Kampanye win-back dengan penawaran terbatas waktu",
+        "Hubungi personal via Shopee Chat",
+        "Diskon khusus berdasarkan produk terakhir dibeli"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Pelanggan Bernilai Terancam",
+      "count": 5483,
+      "recency": 1539.0,
+      "frequency": 5.0,
+      "monetary": 458654.0,
+      "badge": "error",
+      "color_dot": "#ef4444",
+      "description": "Bernilai sangat tinggi namun sudah lama tidak aktif. Kehilangan segmen ini berdampak besar pada pendapatan.",
+      "recommendations": [
+        "Prioritas tertinggi — hubungi langsung via Shopee Chat",
+        "Penawaran eksklusif: diskon besar atau bundle premium",
+        "Jadwalkan follow-up dalam 7 hari"
+      ]
+    }
+  ]
+}

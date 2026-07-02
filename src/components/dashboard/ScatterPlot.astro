@@ -1,0 +1,92 @@
+---
+import { Map } from '@lucide/astro'
+---
+<div class="card glass-card hover-lift shadow-sm">
+  <div class="card-body p-6 lg:p-10">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary [&>svg]:w-4 [&>svg]:h-4"><Map /></div>
+      <div>
+        <h3 class="card-title font-bold text-sm uppercase tracking-wide m-0">Peta Sebaran Pelanggan (UMAP + HDBSCAN)</h3>
+        <p class="text-[10px] font-semibold text-base-content/50 uppercase tracking-widest mt-0.5">Visualisasi Scatter Plot 2D</p>
+      </div>
+    </div>
+    
+    <div class="border-2 border-base-200 rounded-2xl h-[500px] flex items-center justify-center bg-base-100/50 p-4 relative">
+      <canvas id="scatterChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Chart from 'chart.js/auto'
+  import segmentsData from '../../data/segments.json'
+  import scatterData from '../../data/scatter.json'
+  
+  document.addEventListener('astro:page-load', () => {
+    const ctx = document.getElementById('scatterChart') as HTMLCanvasElement
+    if (ctx) {
+      const existingChart = Chart.getChart(ctx)
+      if (existingChart) existingChart.destroy()
+
+      const segments = segmentsData.segments
+      
+      // Group scatter data by cluster_id
+      const datasets = segments.map(segment => {
+        const points = scatterData.filter(d => d.cluster_id === segment.id)
+        return {
+          label: segment.name,
+          data: points.map(p => ({ x: p.x, y: p.y })),
+          backgroundColor: segment.color_dot,
+          borderColor: segment.color_dot,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+          borderWidth: 0
+        }
+      })
+      
+      new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'UMAP 1', font: { family: 'Plus Jakarta Sans', weight: 'bold' } },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            y: {
+              title: { display: true, text: 'UMAP 2', font: { family: 'Plus Jakarta Sans', weight: 'bold' } },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { 
+                usePointStyle: true, 
+                pointStyle: 'circle',
+                font: { family: 'Plus Jakarta Sans', size: 12, weight: 600 },
+                padding: 20
+              } 
+            },
+            tooltip: {
+              backgroundColor: 'rgba(26, 26, 26, 0.9)',
+              titleFont: { family: 'Plus Jakarta Sans', size: 13, weight: 'bold' },
+              bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
+              padding: 10,
+              cornerRadius: 8,
+              callbacks: {
+                label: (context) => {
+                  return `${context.dataset.label}`
+                }
+              }
+            }
+          }
+        }
+      })
+    }
+  })
+</script>

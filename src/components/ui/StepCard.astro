@@ -1,0 +1,20 @@
+---
+interface Props {
+  step: number
+  title: string
+  description: string
+}
+const { step, title, description } = Astro.props
+---
+<div class="bg-base-200/50 rounded-xl p-5 border border-base-300 relative group overflow-hidden transition-all duration-300 hover:bg-white hover:shadow-lg hover:border-primary/20">
+  <div class="absolute -top-2 -right-2 p-4 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-300 text-primary [&>svg]:w-16 [&>svg]:h-16">
+    <slot name="icon" />
+  </div>
+  
+  <div class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-base-100 shadow-sm border border-base-300 text-xs font-bold mb-4 group-hover:bg-primary group-hover:text-white transition-colors duration-300 relative z-10">
+    {step}
+  </div>
+  
+  <h3 class="font-bold text-sm tracking-tight text-primary mb-2 relative z-10">{title}</h3>
+  <p class="text-xs font-medium text-base-content/60 leading-relaxed relative z-10">{description}</p>
+</div>

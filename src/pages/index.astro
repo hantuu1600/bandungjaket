@@ -1,0 +1,191 @@
+---
+import LandingLayout from "../layouts/LandingLayout.astro";
+import StatCard from "../components/ui/StatCard.astro";
+import {
+  Users,
+  ShoppingCart,
+  Target,
+  Repeat,
+  BarChart3,
+  Crosshair,
+  Microscope,
+  ArrowRight,
+} from "@lucide/astro";
+---
+
+<LandingLayout title="Overview">
+  <!-- BACKGROUND EFFECTS -->
+  <div class="fixed inset-0 pointer-events-none -z-20 overflow-hidden">
+    <div
+      class="absolute top-[-10%] left-[-10%] w-[50%] h-[60%] bg-primary/5 rounded-full blur-[120px]"
+    >
+    </div>
+    <div
+      class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[60%] bg-accent/5 rounded-full blur-[120px]"
+    >
+    </div>
+    <!-- Subtle Grid Background -->
+    <div
+      class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNCkiLz48L3N2Zz4=')] opacity-60"
+    >
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div
+    class="relative min-h-[85vh] flex items-center justify-center pt-24 pb-16 px-6"
+  >
+    <div class="max-w-5xl mx-auto text-center flex flex-col items-center">
+      <!-- Main Heading -->
+      <h1
+        class="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[1.05] tracking-tighter text-primary mb-8 fade-in-up delay-100"
+      >
+        Kenali <span
+          class="text-transparent bg-clip-text bg-gradient-to-br from-primary via-primary/80 to-accent"
+          >Lebih Dalam</span
+        ><br />
+        Pelanggan Anda.
+      </h1>
+
+      <!-- Subtitle -->
+      <p
+        class="text-lg md:text-xl text-base-content/60 max-w-2xl mx-auto leading-relaxed font-medium mb-10 fade-in-up delay-200"
+      >
+        Platform analitik CRM tingkat lanjut untuk <strong
+          class="text-primary font-bold">bandungjaket.com</strong
+        >. Menganalisis pola perilaku lebih dari 390 ribu pelanggan menggunakan <span
+          class="bg-primary/5 border border-primary/10 px-2 py-0.5 rounded text-primary"
+          >UMAP</span
+        > & <span
+          class="bg-accent/10 border border-accent/10 px-2 py-0.5 rounded text-accent"
+          >HDBSCAN</span
+        >.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div
+        class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto fade-in-up delay-300"
+      >
+        <a
+          href="/dashboard"
+          class="btn btn-primary btn-lg rounded-full shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 px-8 group border-none"
+        >
+          Masuk Dashboard
+          <ArrowRight
+            class="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform"
+          />
+        </a>
+        <a
+          href="/prediksi"
+          class="btn btn-outline btn-lg rounded-full bg-base-100/50 backdrop-blur-sm border-base-300 hover:bg-base-200 hover:-translate-y-1 transition-all duration-300 px-8 text-base-content"
+        >
+          Simulasi Segmen
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS (Overlap the hero slightly) -->
+  <section class="px-6 pb-20 max-w-6xl mx-auto -mt-8 relative z-10">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 fade-in-up delay-400"
+    >
+      <StatCard
+        label="Pelanggan Unik"
+        value="390.167"
+        subtitle="Sep 2020 – Okt 2025"><Users slot="icon" /></StatCard
+      >
+      <StatCard
+        label="Transaksi Valid"
+        value="481.682"
+        subtitle="Setelah preprocessing"><ShoppingCart slot="icon" /></StatCard
+      >
+      <StatCard
+        label="Klaster Segmen"
+        value="6 Segmen"
+        subtitle="Layer 2 repeat buyer"><Target slot="icon" /></StatCard
+      >
+      <StatCard label="Repeat Buyer" value="10,8%" subtitle="42.248 dari total"
+        ><Repeat slot="icon" /></StatCard
+      >
+    </div>
+  </section>
+
+  <!-- INFO CARDS (Methodology) -->
+  <section class="px-6 pb-32 max-w-6xl mx-auto">
+    <div class="text-center mb-14 fade-in-up">
+      <h2 class="text-3xl font-bold tracking-tight text-primary">
+        Metodologi & Tujuan
+      </h2>
+      <p class="text-base-content/60 mt-3 font-medium text-lg">
+        Pendekatan analitik di balik segmentasi pelanggan.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in-up delay-100">
+      <!-- Card 1 -->
+      <div
+        class="group relative bg-base-100/80 backdrop-blur-xl rounded-3xl p-8 border border-base-200 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-500 overflow-hidden cursor-default"
+      >
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full -z-10 transition-transform group-hover:scale-110"
+        >
+        </div>
+        <div
+          class="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-500 shadow-inner"
+        >
+          <BarChart3 class="w-7 h-7" />
+        </div>
+        <h3 class="text-xl font-bold tracking-tight mb-3">
+          Analisis Skala Besar
+        </h3>
+        <p class="text-sm font-medium text-base-content/60 leading-relaxed">
+          Menganalisis 742.182 baris transaksi mentah untuk mengidentifikasi
+          pola tersembunyi menggunakan teknik machine learning tanpa supervisi.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div
+        class="group relative bg-base-100/80 backdrop-blur-xl rounded-3xl p-8 border border-base-200 shadow-sm hover:shadow-xl hover:border-accent/20 transition-all duration-500 overflow-hidden cursor-default"
+      >
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/5 to-transparent rounded-bl-full -z-10 transition-transform group-hover:scale-110"
+        >
+        </div>
+        <div
+          class="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-accent mb-6 group-hover:scale-110 group-hover:bg-accent/10 transition-all duration-500 shadow-inner"
+        >
+          <Crosshair class="w-7 h-7" />
+        </div>
+        <h3 class="text-xl font-bold tracking-tight mb-3">Tepat Sasaran</h3>
+        <p class="text-sm font-medium text-base-content/60 leading-relaxed">
+          Mengelompokkan pelanggan berdasarkan model RFM untuk merancang
+          strategi pemasaran yang personal dan meningkatkan retensi pembeli.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div
+        class="group relative bg-base-100/80 backdrop-blur-xl rounded-3xl p-8 border border-base-200 shadow-sm hover:shadow-xl hover:border-info/20 transition-all duration-500 overflow-hidden cursor-default"
+      >
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-info/5 to-transparent rounded-bl-full -z-10 transition-transform group-hover:scale-110"
+        >
+        </div>
+        <div
+          class="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-info mb-6 group-hover:scale-110 group-hover:bg-info/10 transition-all duration-500 shadow-inner"
+        >
+          <Microscope class="w-7 h-7" />
+        </div>
+        <h3 class="text-xl font-bold tracking-tight mb-3">
+          Two-Layer Clustering
+        </h3>
+        <p class="text-sm font-medium text-base-content/60 leading-relaxed">
+          Inovasi pipeline RFM → Yeo-Johnson → reduksi UMAP → HDBSCAN yang
+          dievaluasi ketat menggunakan metrik Silhouette & DBCV.
+        </p>
+      </div>
+    </div>
+  </section>
+</LandingLayout>

@@ -1,0 +1,71 @@
+---
+import { PieChart } from '@lucide/astro'
+---
+<div class="card glass-card hover-lift shadow-sm flex flex-col h-full">
+  <div class="card-body">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary [&>svg]:w-4 [&>svg]:h-4"><PieChart /></div>
+      <div>
+        <h3 class="card-title font-bold text-sm uppercase tracking-wide m-0">Proporsi Segmen</h3>
+        <p class="text-[10px] font-semibold text-base-content/50 uppercase tracking-widest mt-0.5">Persentase dari Repeat Buyer</p>
+      </div>
+    </div>
+    <div class="flex-1 w-full flex items-center justify-center min-h-[250px]">
+      <canvas id="donutChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Chart from 'chart.js/auto'
+  import segmentsData from '../../data/segments.json'
+  
+  document.addEventListener('astro:page-load', () => {
+    const ctx = document.getElementById('donutChart') as HTMLCanvasElement
+    if (ctx) {
+      const existingChart = Chart.getChart(ctx)
+      if (existingChart) existingChart.destroy()
+
+      const data = segmentsData.segments
+      
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: data.map(d => d.name),
+          datasets: [{
+            data: data.map(d => d.count),
+            backgroundColor: data.map(d => d.color_dot),
+            borderWidth: 2,
+            borderColor: '#ffffff',
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { 
+                boxWidth: 12, 
+                usePointStyle: true, 
+                pointStyle: 'circle',
+                font: { family: 'Plus Jakarta Sans', size: 12, weight: 600 },
+                color: '#374151',
+                padding: 15
+              } 
+            },
+            tooltip: {
+              backgroundColor: 'rgba(26, 26, 26, 0.9)',
+              titleFont: { family: 'Plus Jakarta Sans', size: 14, weight: 'bold' },
+              bodyFont: { family: 'Plus Jakarta Sans', size: 13 },
+              padding: 12,
+              cornerRadius: 8
+            }
+          }
+        }
+      })
+    }
+  })
+</script>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  label: string
+  value: string
+  subtitle?: string
+}
+const { label, value, subtitle } = Astro.props
+---
+<div class="stats shadow-sm glass-card hover-lift w-full overflow-hidden group">
+  <div class="stat relative z-10">
+    <div class="stat-figure text-primary/30 group-hover:text-primary transition-colors duration-300">
+      <div class="w-12 h-12 rounded-xl bg-base-200 flex items-center justify-center text-2xl shadow-inner [&>svg]:w-6 [&>svg]:h-6">
+        <slot name="icon" />
+      </div>
+    </div>
+    <div class="stat-title text-sm font-medium text-base-content/60 tracking-wide uppercase whitespace-normal">{label}</div>
+    <div class="stat-value text-3xl font-bold text-primary tracking-tight my-1">{value}</div>
+    {subtitle && (
+      <div class="stat-desc text-xs font-medium text-base-content/50 mt-1 whitespace-normal">
+        <span class="bg-base-200/50 px-2 py-1 rounded-md">{subtitle}</span>
+      </div>
+    )}
+  </div>
+  <!-- Decorative background circle -->
+  <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-primary/5 group-hover:scale-150 transition-transform duration-500 ease-out z-0"></div>
+</div>

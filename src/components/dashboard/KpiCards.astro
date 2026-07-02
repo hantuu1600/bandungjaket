@@ -1,0 +1,10 @@
+---
+import StatCard from '../ui/StatCard.astro'
+import { Users, Repeat, Star } from '@lucide/astro'
+import summary from '../../data/summary.json'
+---
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 fade-in-up delay-100">
+  <StatCard label="Total Pelanggan"          value="390.167"   subtitle="Pelanggan unik Sep 2020 – Okt 2025"><Users slot="icon" /></StatCard>
+  <StatCard label="Repeat Buyer"             value="42.248"    subtitle="10,8% dari total pelanggan"><Repeat slot="icon" /></StatCard>
+  <StatCard label="Kualitas Model (DBCV)"    value="0.796"     subtitle="Skor sempurna: 1.0 (Layer 2)"><Star slot="icon" /></StatCard>
+</div>

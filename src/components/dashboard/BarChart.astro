@@ -1,0 +1,89 @@
+---
+import { BarChart3 } from '@lucide/astro'
+---
+<div class="card glass-card hover-lift shadow-sm flex flex-col h-full">
+  <div class="card-body">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary [&>svg]:w-4 [&>svg]:h-4"><BarChart3 /></div>
+      <div>
+        <h3 class="card-title font-bold text-sm uppercase tracking-wide m-0">Distribusi Segmen Pelanggan</h3>
+        <p class="text-[10px] font-semibold text-base-content/50 uppercase tracking-widest mt-0.5">Berdasarkan Total Populasi</p>
+      </div>
+    </div>
+    <!-- min-h lebih tinggi agar label horizontal tidak terpotong -->
+    <div class="flex-1 w-full min-h-[320px]">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Chart from 'chart.js/auto'
+  import segmentsData from '../../data/segments.json'
+
+  document.addEventListener('astro:page-load', () => {
+    const ctx = document.getElementById('barChart') as HTMLCanvasElement
+    if (ctx) {
+      const existingChart = Chart.getChart(ctx)
+      if (existingChart) existingChart.destroy()
+
+      const data = segmentsData.segments
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(d => d.name),
+          datasets: [{
+            label: 'Jumlah Pelanggan',
+            data: data.map(d => d.count),
+            backgroundColor: data.map(d => d.color_dot + 'CC'), // slight transparency
+            borderColor: data.map(d => d.color_dot),
+            borderWidth: 1.5,
+            borderRadius: 6,
+            barPercentage: 0.65,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          // ← Horizontal bar: labels on Y-axis (left), values on X-axis (bottom)
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(26, 26, 26, 0.92)',
+              titleFont: { family: 'Plus Jakarta Sans', size: 13, weight: 'bold' },
+              bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: true,
+              callbacks: {
+                label: (ctx) => `  ${(ctx.parsed.x ?? 0).toLocaleString('id-ID')} pelanggan`
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                font: { family: 'Plus Jakarta Sans', size: 12, weight: 600 },
+                color: '#374151',
+              }
+            },
+            x: {
+              beginAtZero: true,
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              border: { display: false },
+              ticks: {
+                font: { family: 'Plus Jakarta Sans', size: 11, weight: 500 },
+                color: '#9ca3af',
+                callback: (val) => Number(val).toLocaleString('id-ID')
+              }
+            }
+          }
+        }
+      })
+    }
+  })
+</script>

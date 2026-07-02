@@ -1,0 +1,26 @@
+---
+import { Home, LayoutDashboard, Search, BookOpen } from '@lucide/astro'
+
+interface Props {
+  activePage: string
+}
+const { activePage } = Astro.props
+---
+<div class="flex w-full">
+  <a href="/" class={`flex flex-col items-center justify-center gap-1 flex-1 py-2 ${activePage === 'overview' ? 'text-primary font-semibold' : 'text-base-content/50'}`}>
+    <span class="[&>svg]:w-5 [&>svg]:h-5"><Home /></span>
+    <span class="text-[10px]">Overview</span>
+  </a>
+  <a href="/dashboard" class={`flex flex-col items-center justify-center gap-1 flex-1 py-2 ${activePage === 'dashboard' ? 'text-primary font-semibold' : 'text-base-content/50'}`}>
+    <span class="[&>svg]:w-5 [&>svg]:h-5"><LayoutDashboard /></span>
+    <span class="text-[10px]">Dashboard</span>
+  </a>
+  <a href="/prediksi" class={`flex flex-col items-center justify-center gap-1 flex-1 py-2 ${activePage === 'prediksi' ? 'text-primary font-semibold' : 'text-base-content/50'}`}>
+    <span class="[&>svg]:w-5 [&>svg]:h-5"><Search /></span>
+    <span class="text-[10px]">Klasifikasi</span>
+  </a>
+  <a href="/tentang" class={`flex flex-col items-center justify-center gap-1 flex-1 py-2 ${activePage === 'tentang' ? 'text-primary font-semibold' : 'text-base-content/50'}`}>
+    <span class="[&>svg]:w-5 [&>svg]:h-5"><BookOpen /></span>
+    <span class="text-[10px]">Metodologi</span>
+  </a>
+</div>

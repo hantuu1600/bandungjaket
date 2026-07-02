@@ -1,0 +1,24 @@
+---
+interface Props {
+  label: string
+  value: string
+  description: string
+  highlight?: boolean
+}
+const { label, value, description, highlight } = Astro.props
+---
+<div class={`card glass-card hover-lift w-full shadow-sm ${highlight ? 'border-primary/30 shadow-primary/10' : ''}`}>
+  <div class="card-body p-5">
+    {highlight && <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none rounded-2xl"></div>}
+    
+    <div class="flex items-center gap-2 mb-2 relative z-10">
+      <span class="text-primary [&>svg]:w-5 [&>svg]:h-5"><slot name="icon" /></span>
+      <h3 class="card-title text-[10px] text-base-content/50 uppercase tracking-widest m-0">{label}</h3>
+    </div>
+    
+    <div class="relative z-10">
+      <p class={`text-3xl font-extrabold tracking-tight mb-2 ${highlight ? 'text-primary' : 'text-base-content'}`}>{value}</p>
+      <p class="text-xs font-medium text-base-content/60 leading-relaxed">{description}</p>
+    </div>
+  </div>
+</div>
