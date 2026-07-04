@@ -12,22 +12,22 @@ import hdbscan
 
 app = FastAPI(title="BandungJaket Segmentasi API")
 
-# Setup CORS agar Frontend Astro (localhost:4323) bisa memanggil API ini
+# Configure CORS middleware for cross-origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Dalam production sebaiknya diganti spesifik URL
+    allow_origins=["*"], # TODO: Restrict origins in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Struktur data dari Frontend
+# Request schemas
 class CustomerData(BaseModel):
     recency: int
     frequency: int
     monetary: float
 
-# Global variables untuk model
+# ML Model instances
 yeo_johnson = None
 umap_model = None
 hdbscan_model = None
@@ -35,7 +35,7 @@ load_error_msg = None
 
 @app.on_event("startup")
 def load_models():
-    """Meload model .pkl saat server pertama kali menyala."""
+    """Initialize ML models on application startup."""
     global yeo_johnson, umap_model, hdbscan_model
     
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,13 +45,13 @@ def load_models():
         yeo_johnson = joblib.load(os.path.join(models_dir, "scaler.pkl"))
         umap_model = joblib.load(os.path.join(models_dir, "umap_reducer.pkl"))
         hdbscan_model = joblib.load(os.path.join(models_dir, "hdbscan_model.pkl"))
-        print("✅ Semua model berhasil di-load!")
+        print("Models loaded successfully.")
     except Exception as e:
         global load_error_msg
         load_error_msg = str(e)
         import traceback
         
-        # Tambahkan informasi daftar file yang ada di dalam Docker!
+        # Append directory contents for debugging container environments
         try:
             files_in_dir = os.listdir(BASE_DIR)
             load_error_msg += f"\n\n[DEBUG] File yang ada di {BASE_DIR}: {files_in_dir}\n"
@@ -59,8 +59,8 @@ def load_models():
             load_error_msg += f"\n\n[DEBUG] Gagal membaca direktori: {ex}\n"
             
         load_error_msg += "\n" + traceback.format_exc()
-        print(f"⚠️ Peringatan: Gagal meload model. Error: {e}")
-        print("Pastikan file scaler.pkl, umap_reducer.pkl, dan hdbscan_model.pkl ada sejajar dengan main.py")
+        print(f"Failed to load models: {e}")
+        print("Ensure scaler.pkl, umap_reducer.pkl, and hdbscan_model.pkl exist in the models directory.")
 
 @app.get("/")
 def read_root():
@@ -75,16 +75,16 @@ def predict_segment(data: CustomerData):
         raise HTTPException(status_code=500, detail="Model belum siap/gagal diload.")
         
     try:
-        # 1. Jadikan DataFrame
+        # Convert to DataFrame
         df = pd.DataFrame([data.dict()])
         
-        # 2. Transformasi Yeo-Johnson
+        # Apply Yeo-Johnson transformation
         df_transformed = yeo_johnson.transform(df)
         
-        # 3. Reduksi UMAP
+        # UMAP dimensionality reduction
         umap_coords = umap_model.transform(df_transformed)
         
-        # 4. Prediksi Cluster
+        # HDBSCAN clustering prediction
         labels, probabilities = hdbscan.approximate_predict(hdbscan_model, umap_coords)
         cluster_id = int(labels[0])
         
@@ -102,18 +102,18 @@ def predict_segment(data: CustomerData):
 @app.post("/api/predict_batch_raw")
 async def predict_batch_raw(file: UploadFile = File(...)):
     """
-    Endpoint untuk menerima RAW DATASET (seperti dari Kaggle), menghitung RFM secara dinamis, 
-    dan melakukan prediksi klaster. (Hanya untuk demonstrasi, tidak disarankan untuk file > 50MB)
+    Batch predict endpoint handling raw Kaggle dataset. 
+    Performs dynamic RFM calculation and clustering prediction.
     """
     if not yeo_johnson or not umap_model or not hdbscan_model:
         raise HTTPException(status_code=500, detail="Models are not loaded on server.")
         
     try:
-        # 1. Baca CSV Raw
+        # Parse CSV
         content = await file.read()
         df = pd.read_csv(io.BytesIO(content), low_memory=False)
         
-        # 2. Proses RFM (Logic dari Notebook)
+        # Calculate RFM metrics
         if 'Waktu Pesanan Selesai' not in df.columns or 'Username (Pembeli)' not in df.columns:
             raise HTTPException(status_code=400, detail="Kolom Waktu Pesanan Selesai atau Username tidak ditemukan di CSV.")
             
@@ -122,10 +122,10 @@ async def predict_batch_raw(file: UploadFile = File(...)):
         
         acuan = df['completion_date'].max() + pd.Timedelta(days=1)
         
-        # Gunakan 'Total Pembayaran' atau 'Total Harga Produk' untuk Monetary
+        # Determine monetary column
         monetary_col = 'Total Pembayaran' if 'Total Pembayaran' in df.columns else 'Total Harga Produk'
         if monetary_col not in df.columns:
-            monetary_col = df.columns[-1] # fallback
+            monetary_col = df.columns[-1] # Fallback mechanism
             
         rfm = df.groupby('Username (Pembeli)').agg(
             last_buy=('completion_date', 'max'),
@@ -135,25 +135,25 @@ async def predict_batch_raw(file: UploadFile = File(...)):
 
         rfm['recency'] = (acuan - rfm['last_buy']).dt.days
         
-        # 3. Filter Repeat Buyers
+        # Filter repeat buyers (frequency >= 2)
         repeat = rfm[rfm['frequency'] >= 2].copy()
         if len(repeat) == 0:
             raise HTTPException(status_code=400, detail="Tidak ada pelanggan dengan frekuensi >= 2 (repeat buyer) di dataset ini.")
             
-        # 4. Prediksi
+        # Execute prediction pipeline
         fitur = ['recency', 'frequency', 'monetary']
         
-        # Karena kita pakai Pipeline: PowerTransformer -> UMAP -> HDBSCAN
+        # Pipeline: PowerTransformer -> UMAP -> HDBSCAN
         X = yeo_johnson.transform(repeat[fitur].values)
         emb = umap_model.transform(X)
         labels, probabilities = hdbscan.approximate_predict(hdbscan_model, emb)
         
-        # 5. Format Output
+        # Format response data
         repeat['cluster_id'] = labels
         repeat['umap_x'] = emb[:, 0]
         repeat['umap_y'] = emb[:, 1]
         
-        # Kembalikan maksimal 5000 baris agar JSON tidak crash
+        # Limit output to 5000 records to prevent memory overflow
         hasil = repeat[['Username (Pembeli)', 'recency', 'frequency', 'monetary', 'cluster_id', 'umap_x', 'umap_y']].head(5000).to_dict(orient='records')
         
         return {
