@@ -7,7 +7,7 @@ import TopNavbar from '../components/navigation/TopNavbar.astro';
 
 interface Props {
   title: string
-  activePage: 'overview' | 'dashboard' | 'prediksi' | 'tentang'
+  activePage: 'overview' | 'dashboard' | 'tentang'
 }
 const { title, activePage } = Astro.props
 const isLanding = activePage === 'overview'
@@ -30,7 +30,7 @@ const isLanding = activePage === 'overview'
       </main>
     </div>
   ) : (
-    <!-- APP LAYOUT (Dashboard, Prediksi, Tentang) -->
+    <!-- APP LAYOUT (Dashboard, Tentang) -->
     <div class="flex min-h-screen">
       <!-- Sidebar desktop -->
       <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:min-h-screen bg-base-100/80 backdrop-blur-sm border-r border-base-300 shadow-sm z-20">
@@ -64,7 +64,7 @@ const isLanding = activePage === 'overview'
 
   <!-- Bottom tabs mobile -->
   {!isLanding && (
-    <nav transition:persist class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-base-100 border-t border-base-300 h-16 flex items-center shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-base-100 border-t border-base-300 h-16 flex items-center shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
       <BottomTabs activePage={activePage} />
     </nav>
   )}

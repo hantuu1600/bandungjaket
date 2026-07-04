@@ -9,10 +9,6 @@ import random
 df = pd.read_csv('hasil_segmentasi.csv')
 print(f"Total data: {len(df)} baris")
 
-# ============================================================
-# 1. Buat scatter.json (sample 3000 titik agar browser lancar)
-# ============================================================
-# Stratified sample: ambil proporsional dari setiap cluster
 sample_frames = []
 for cid in sorted(df['cluster'].unique()):
     cluster_df = df[df['cluster'] == cid]
@@ -36,9 +32,6 @@ with open('src/data/scatter.json', 'w') as f:
     json.dump(scatter_data, f)
 print(f"[OK] scatter.json: {len(scatter_data)} titik data RIIL")
 
-# ============================================================
-# 2. Update segments.json dengan statistik riil
-# ============================================================
 segment_names = {
     0: "Pelanggan Potensial",
     1: "Pelanggan Dorman",
