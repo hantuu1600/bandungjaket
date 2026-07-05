@@ -1,0 +1,322 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import segmentsData from "../data/segments.json";
+import {
+  Search,
+  Info,
+  AlertTriangle,
+  AlertCircle,
+  CheckCircle,
+} from "@lucide/astro";
+---
+
+<BaseLayout title="Simulasi Segmen" activePage="prediksi">
+  <div class="mb-8 fade-in-up">
+    <div
+      class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-base-100 border border-base-300 shadow-sm mb-4"
+    >
+      <span
+        class="text-xs font-semibold uppercase tracking-wider text-base-content/70"
+        >Klasifikasi Pelanggan</span
+      >
+    </div>
+    <h1 class="text-3xl lg:text-4xl font-bold tracking-tight text-primary">
+      Simulasi Segmen
+    </h1>
+    <p class="text-base text-base-content/60 mt-2 max-w-2xl">
+      Masukkan nilai RFM pelanggan untuk melihat ke segmen mana pelanggan
+      tersebut masuk.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Form Card -->
+    <div
+      class="card bg-base-100 shadow-xl border border-base-200 fade-in-up delay-100"
+    >
+      <div class="card-body">
+        <h2 class="card-title text-xl mb-4">Input Data RFM</h2>
+
+        <form id="prediction-form" class="flex flex-col gap-4">
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-semibold">Recency (Hari)</span>
+            </label>
+            <input
+              type="number"
+              id="input-recency"
+              placeholder="Contoh: 60"
+              min="0"
+              required
+              class="input input-bordered w-full"
+            />
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-semibold">Frequency (Transaksi)</span>
+            </label>
+            <input
+              type="number"
+              id="input-frequency"
+              placeholder="Contoh: 5"
+              min="1"
+              required
+              class="input input-bordered w-full"
+            />
+          </div>
+
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-semibold">Monetary (Total Belanja Rp)</span>
+            </label>
+            <input
+              type="number"
+              id="input-monetary"
+              placeholder="Contoh: 250000"
+              min="1"
+              step="0.01"
+              required
+              class="input input-bordered w-full"
+            />
+          </div>
+
+          <button type="submit" id="btn-predict" class="btn btn-primary mt-4">
+            <Search class="w-5 h-5 mr-2" />
+            Lakukan Simulasi
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Result Area -->
+    <div class="fade-in-up delay-200">
+      <!-- Loading State -->
+      <div
+        id="loading-state"
+        class="hidden card bg-base-100 shadow-xl border border-base-200 h-full"
+      >
+        <div
+          class="card-body flex flex-col items-center justify-center text-center py-12"
+        >
+          <span class="loading loading-spinner loading-lg text-primary mb-4"
+          ></span>
+          <h3 class="font-bold text-lg">Memproses Prediksi</h3>
+          <p class="text-base-content/70 mt-2 max-w-sm">
+            Menghubungi server model... (jika baru pertama kali, ini bisa
+            memakan waktu hingga 1 menit karena proses cold start).
+          </p>
+        </div>
+      </div>
+
+      <!-- Initial State -->
+      <div
+        id="initial-state"
+        class="card bg-base-100 shadow-xl border border-base-200 h-full border-dashed"
+      >
+        <div
+          class="card-body flex flex-col items-center justify-center text-center py-12 text-base-content/50"
+        >
+          <Info class="w-12 h-12 mb-4 opacity-50" />
+          <p>
+            Isi form di samping lalu klik Simulasi untuk melihat hasil
+            klasifikasi segmen.
+          </p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div
+        id="error-state"
+        class="hidden card bg-error/10 shadow-xl border border-error/20 h-full"
+      >
+        <div
+          class="card-body flex flex-col items-center justify-center text-center py-12 text-error"
+        >
+          <AlertTriangle class="w-12 h-12 mb-4" />
+          <h3 class="font-bold text-lg mb-2">Gagal Terhubung</h3>
+          <p id="error-message" class="text-sm">Terjadi kesalahan.</p>
+        </div>
+      </div>
+
+      <!-- Noise State (-1) -->
+      <div
+        id="noise-state"
+        class="hidden card bg-base-100 shadow-xl border border-base-200 h-full"
+      >
+        <div
+          class="card-body flex flex-col items-center justify-center text-center py-12"
+        >
+          <AlertCircle class="w-12 h-12 mb-4 text-warning" />
+          <h3 class="font-bold text-lg mb-2">Outlier Terdeteksi</h3>
+          <p class="text-base-content/70">
+            Pola belanja ini belum cocok dengan segmen manapun yang
+            teridentifikasi. Coba dengan nilai RFM yang lain.
+          </p>
+        </div>
+      </div>
+
+      <!-- Success State -->
+      <div
+        id="success-state"
+        class="hidden card bg-base-100 shadow-xl border border-base-200 h-full relative overflow-hidden"
+      >
+        <!-- Colored top border based on segment -->
+        <div
+          id="result-color-bar"
+          class="absolute top-0 left-0 right-0 h-2 bg-primary"
+        >
+        </div>
+
+        <div class="card-body pt-8">
+          <div class="mb-4">
+            <p
+              class="text-sm font-semibold uppercase tracking-wider text-base-content/50 mb-1"
+            >
+              Hasil Klasifikasi
+            </p>
+            <h2 id="result-name" class="text-2xl font-bold text-base-content mb-3">
+              Nama Segmen
+            </h2>
+            <div
+              id="result-badge-container"
+              class="badge badge-lg shadow-sm border-0 font-semibold px-4 py-3 text-white"
+            >
+            </div>
+          </div>
+
+          <div class="bg-base-200/50 rounded-xl p-4 mb-6">
+            <p
+              id="result-description"
+              class="text-base-content/80 text-sm leading-relaxed"
+            >
+              Deskripsi segmen
+            </p>
+          </div>
+
+          <h3
+            class="font-semibold text-sm uppercase tracking-wider text-base-content/50 mb-3 flex items-center gap-2"
+          >
+            <CheckCircle class="w-4 h-4" /> Rekomendasi Aksi
+          </h3>
+          <ul
+            id="result-recommendations"
+            class="space-y-2 text-sm text-base-content/80"
+          >
+            <!-- Injected via JS -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script type="application/json" id="segments-data" set:html={JSON.stringify(segmentsData.segments)} />
+
+<script>
+  const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL || "https://hantuu16-data-bandungjaket.hf.space";
+
+  document.addEventListener("astro:page-load", () => {
+    const form = document.getElementById("prediction-form");
+    if (!form) return;
+
+    const dataEl = document.getElementById("segments-data");
+    if (!dataEl) return;
+    const segments = JSON.parse(dataEl.textContent || "[]");
+
+    const initialState = document.getElementById("initial-state");
+    const loadingState = document.getElementById("loading-state");
+    const errorState = document.getElementById("error-state");
+    const noiseState = document.getElementById("noise-state");
+    const successState = document.getElementById("success-state");
+    const resultName = document.getElementById("result-name");
+    const resultDescription = document.getElementById("result-description");
+    const resultRecommendations = document.getElementById("result-recommendations");
+    const resultColorBar = document.getElementById("result-color-bar");
+    const resultBadgeContainer = document.getElementById("result-badge-container");
+    const errorMessage = document.getElementById("error-message");
+
+    function hideAllStates() {
+      initialState?.classList.add("hidden");
+      loadingState?.classList.add("hidden");
+      errorState?.classList.add("hidden");
+      noiseState?.classList.add("hidden");
+      successState?.classList.add("hidden");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const recency = parseInt((document.getElementById("input-recency") as HTMLInputElement).value);
+      const frequency = parseInt((document.getElementById("input-frequency") as HTMLInputElement).value);
+      const monetary = parseFloat((document.getElementById("input-monetary") as HTMLInputElement).value);
+
+      if (isNaN(recency) || isNaN(frequency) || isNaN(monetary) || recency < 0 || frequency <= 0 || monetary <= 0) {
+        return;
+      }
+
+      hideAllStates();
+      loadingState?.classList.remove("hidden");
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ recency, frequency, monetary }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            response.status === 500 || response.status === 503
+              ? "Server API model sedang sibuk atau baru bangun dari sleep. Silakan tunggu 1-2 menit lalu coba lagi."
+              : "Gagal memproses data. Silakan coba lagi."
+          );
+        }
+
+        const data = await response.json();
+        const clusterId = data.cluster_id;
+
+        hideAllStates();
+
+        if (clusterId === -1) {
+          noiseState?.classList.remove("hidden");
+          return;
+        }
+
+        const segment = segments.find((s: any) => s.id === clusterId);
+
+        if (!segment) {
+          noiseState?.classList.remove("hidden");
+          return;
+        }
+
+        if (resultName) resultName.textContent = segment.name;
+        if (resultDescription) resultDescription.textContent = segment.description;
+        if (resultColorBar) resultColorBar.style.backgroundColor = segment.color_dot;
+
+        if (resultBadgeContainer) {
+          resultBadgeContainer.style.backgroundColor = segment.color_dot;
+          resultBadgeContainer.textContent = segment.name;
+        }
+
+        if (resultRecommendations) {
+          resultRecommendations.innerHTML = "";
+          segment.recommendations.forEach((rec: string) => {
+            const li = document.createElement("li");
+            li.className = "flex items-start gap-2";
+            li.innerHTML = `<span class="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style="background-color: ${segment.color_dot}"></span> <span>${rec}</span>`;
+            resultRecommendations.appendChild(li);
+          });
+        }
+
+        successState?.classList.remove("hidden");
+      } catch (err: any) {
+        hideAllStates();
+        errorState?.classList.remove("hidden");
+        if (errorMessage) {
+          errorMessage.textContent = err.message || "Gagal menghubungi server. Pastikan koneksi internet stabil.";
+        }
+      }
+    });
+  });
+</script>

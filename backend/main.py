@@ -15,7 +15,11 @@ app = FastAPI(title="BandungJaket Segmentasi API")
 # Configure CORS middleware for cross-origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # TODO: Restrict origins in production
+    allow_origins=[
+        "https://bandungjaket.vercel.app",
+        "http://localhost:4321",
+        "http://localhost:4323",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -67,6 +71,16 @@ def read_root():
     return {
         "message": "API Segmentasi BandungJaket Aktif!",
         "load_error": load_error_msg
+    }
+
+@app.get("/api/model-info")
+def model_info():
+    return {
+        "r_mid_recency": 1481,
+        "f_p75_frequency": 3,
+        "m_p75_monetary": 233238,
+        "n_clusters": 6,
+        "algorithm": "UMAP + HDBSCAN (2-layer: repeat buyers only)"
     }
 
 @app.post("/api/predict")

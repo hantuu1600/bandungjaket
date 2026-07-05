@@ -7,7 +7,7 @@ import TopNavbar from '../components/navigation/TopNavbar.astro';
 
 interface Props {
   title: string
-  activePage: 'overview' | 'dashboard' | 'tentang'
+  activePage: 'overview' | 'dashboard' | 'prediksi' | 'tentang'
 }
 const { title, activePage } = Astro.props
 const isLanding = activePage === 'overview'
@@ -16,7 +16,8 @@ const isLanding = activePage === 'overview'
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title}</title>
+  <meta name="description" content="Dashboard CRM Analytics - Segmentasi pelanggan bandungjaket.com menggunakan UMAP dan HDBSCAN" />
+  <title>{title} | BandungJaket CRM</title>
   <ClientRouter />
 </head>
 <body class="min-h-screen selection:bg-accent/30 text-base-content font-sans">
@@ -30,7 +31,7 @@ const isLanding = activePage === 'overview'
       </main>
     </div>
   ) : (
-    <!-- APP LAYOUT (Dashboard, Tentang) -->
+    <!-- APP LAYOUT -->
     <div class="flex min-h-screen">
       <!-- Sidebar desktop -->
       <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:min-h-screen bg-base-100/80 backdrop-blur-sm border-r border-base-300 shadow-sm z-20">
@@ -42,9 +43,6 @@ const isLanding = activePage === 'overview'
         <header class="sticky top-0 z-10 hidden lg:block bg-base-100/90 backdrop-blur-sm border-b border-base-300 shadow-sm">
           <div class="px-8 py-4 flex items-center justify-between">
             <div class="font-semibold text-lg text-primary">{title}</div>
-            <div class="flex items-center gap-4">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent text-white flex items-center justify-center text-xs font-bold shadow-md">FR</div>
-            </div>
           </div>
         </header>
 
