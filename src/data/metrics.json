@@ -3,20 +3,20 @@
     "label": "Populasi Penuh",
     "description": "Seluruh 390.167 pelanggan unik",
     "n_clusters": 8,
-    "noise_pct": 2.4,
-    "dbcv": 0.0111,
-    "silhouette_umap": -0.1878,
-    "silhouette_rfm": -0.4587,
-    "cluster_stability": 0.7469
+    "noise_pct": 2.5,
+    "dbcv": 0.0049,
+    "silhouette_umap": 0.096,
+    "silhouette_rfm": -0.2851,
+    "cluster_stability": 0.8551
   },
   "layer2": {
     "label": "Repeat Buyer",
     "description": "42.248 pelanggan dengan ≥2 transaksi",
     "n_clusters": 6,
     "noise_pct": 0.0,
-    "dbcv": 0.796,
-    "silhouette_umap": 0.326,
+    "dbcv": 0.789,
+    "silhouette_umap": 0.325,
     "silhouette_rfm": 0.430,
-    "cluster_stability": 0.98
+    "cluster_stability": 0.9092
   }
 }

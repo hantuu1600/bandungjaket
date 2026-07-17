@@ -119,6 +119,10 @@ const { layer1, layer2 } = metricsData;
             <span class="font-bold text-error text-sm">{layer1.silhouette_rfm.toFixed(4)}</span>
           </div>
           <div class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Silhouette UMAP</span>
+            <span class="font-bold text-sm">{layer1.silhouette_umap.toFixed(3)}</span>
+          </div>
+          <div class="flex justify-between items-center">
             <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Cluster Stability</span>
             <span class="font-bold text-sm">{layer1.cluster_stability.toFixed(4)}</span>
           </div>
@@ -160,6 +164,10 @@ const { layer1, layer2 } = metricsData;
             <span class="font-bold text-success text-sm">{layer2.silhouette_rfm.toFixed(3)}</span>
           </div>
           <div class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Silhouette UMAP</span>
+            <span class="font-bold text-success text-sm">{layer2.silhouette_umap.toFixed(3)}</span>
+          </div>
+          <div class="flex justify-between items-center">
             <span class="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Cluster Stability</span>
             <span class="font-bold text-success text-sm">{layer2.cluster_stability.toFixed(2)}</span>
           </div>
@@ -181,10 +189,11 @@ const { layer1, layer2 } = metricsData;
     <h2 class="text-xs font-bold tracking-widest mb-6 uppercase text-base-content/50">
       Metrik Detail: Layer 2 (Repeat Buyer)
     </h2>
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <MetricCard label="DBCV" value="0.796" description="Kualitas pemisahan kepadatan klaster. Mendekati 1.0 = sempurna" highlight={true}><Target slot="icon" /></MetricCard>
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <MetricCard label="DBCV" value="0.789" description="Kualitas pemisahan kepadatan klaster. Mendekati 1.0 = sempurna" highlight={true}><Target slot="icon" /></MetricCard>
       <MetricCard label="Silhouette RFM" value="0.430" description="Validitas jarak antar klaster pada ruang RFM asli"><Ruler slot="icon" /></MetricCard>
-      <MetricCard label="Stability" value="0.980" description="Konsistensi pembentukan klaster terhadap perubahan data" highlight={true}><ShieldCheck slot="icon" /></MetricCard>
+      <MetricCard label="Silhouette UMAP" value="0.325" description="Validitas jarak antar klaster pada ruang UMAP"><Ruler slot="icon" /></MetricCard>
+      <MetricCard label="Stability" value="0.9092" description="Konsistensi pembentukan klaster terhadap perubahan data" highlight={true}><ShieldCheck slot="icon" /></MetricCard>
       <MetricCard label="Noise" value="0%" description="Proporsi data yang tidak masuk klaster manapun"><Eraser slot="icon" /></MetricCard>
     </div>
   </div>
